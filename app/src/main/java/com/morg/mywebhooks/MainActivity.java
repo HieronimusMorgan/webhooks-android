@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new WebhooksConfiguration(getApplicationContext(), "")
+                new WebhooksConfiguration(getApplicationContext(), "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv")
                         .setTitle("Testing")
                         .setDescription("Description Testing")
                         .addField(new Fields("Coba", "Isinya ini"))
