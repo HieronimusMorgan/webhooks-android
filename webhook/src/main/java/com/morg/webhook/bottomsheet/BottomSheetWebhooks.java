@@ -1,67 +1,58 @@
 package com.morg.webhook.bottomsheet;
 
 
+import android.app.Dialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.button.MaterialButton;
 import com.morg.webhook.R;
+import com.morg.webhook.databinding.WebhooksBottomSheetNexmitraBinding;
 
 
 public class BottomSheetWebhooks extends BottomSheetDialogFragment {
+    private final String title;
     private final OnClickBottomSheetWebhooks onClickBottomSheetWebhooks;
-    private final String code;
+    private final String description;
+    private WebhooksBottomSheetNexmitraBinding binding;
 
-    public BottomSheetWebhooks(String code, OnClickBottomSheetWebhooks onClickBottomSheetWebhooks) {
+    public BottomSheetWebhooks(String title, String description, OnClickBottomSheetWebhooks onClickBottomSheetWebhooks) {
         this.onClickBottomSheetWebhooks = onClickBottomSheetWebhooks;
-        this.code = code;
+        this.title = title;
+        this.description = description;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.ThemeOverlay_RounderUpperCorner_BottomSheetDialog);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.WebhooksBottomSheetStyles);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.webhooks_bottom_sheet_nexmitra, container, false);
-    }
+        View view = View.inflate(getContext(), R.layout.webhooks_bottom_sheet_nexmitra, null);
+        binding = WebhooksBottomSheetNexmitraBinding.bind(view);
+        if (!title.isEmpty())
+            binding.tvTitle.setText(title);
+        if (!description.isEmpty())
+            binding.tvDescription.setText(description);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        MaterialButton btnConfirm = view.findViewById(R.id.btn_yes);
-        MaterialButton btnCancel = view.findViewById(R.id.btn_cancel);
-//        TextView tvCode = view.findViewById(R.id.tv_code);
-//        ImageView imageView = view.findViewById(R.id.iv_copy);
-//        imageView.setOnClickListener(view1 -> {
-//            ClipboardManager clipboard = (ClipboardManager) requireActivity()
-//                    .getSystemService(Context.CLIPBOARD_SERVICE);
-//            ClipData clip = ClipData.newPlainText("Copy", code);
-//            clipboard.setPrimaryClip(clip);
-//            Toast.makeText(requireContext(), "Code ID Copied!", Toast.LENGTH_SHORT).show();
-//        });
-//        tvCode.setOnLongClickListener(view1 -> {
-//            ClipboardManager clipboard = (ClipboardManager) requireActivity()
-//                    .getSystemService(Context.CLIPBOARD_SERVICE);
-//            ClipData clip = ClipData.newPlainText("Copy", code);
-//            clipboard.setPrimaryClip(clip);
-//            Toast.makeText(requireContext(), "Code ID Copied!", Toast.LENGTH_SHORT).show();
-//            return true;
-//        });
-        btnCancel.setOnClickListener(v -> dismiss());
-        btnConfirm.setOnClickListener(v -> {
+        binding.btnCancel.setOnClickListener(v -> dismiss());
+        binding.btnYes.setOnClickListener(v -> {
             onClickBottomSheetWebhooks.onClick(null);
             dismiss();
         });
+        return view;
     }
 }

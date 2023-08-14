@@ -1,10 +1,16 @@
 package com.morg.webhook.configuration;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.gson.Gson;
+import com.morg.webhook.bottomsheet.BottomSheetWebhooks;
+import com.morg.webhook.bottomsheet.OnClickBottomSheetWebhooks;
 import com.morg.webhook.data.RetrofitHttpsCall;
 import com.morg.webhook.data.WebhooksServiceAPI;
 import com.morg.webhook.model.Embeds;
@@ -31,6 +37,8 @@ public class WebhooksConfiguration {
     private final Context context;
     private String title;
     private String description;
+    private String titleBottomSheet;
+    private String descriptionBottomSheet;
     private List<Fields> fields;
     private WebhooksServiceAPI webhooksServiceAPI;
     private String webhooksUrl;
@@ -64,7 +72,26 @@ public class WebhooksConfiguration {
         return this;
     }
 
+    public WebhooksConfiguration bottomSheet(String title, String description) {
+        titleBottomSheet = title;
+        descriptionBottomSheet = description;
+        return this;
+    }
+
     public WebhooksConfiguration build() {
+        try {
+            if (titleBottomSheet != null && descriptionBottomSheet != null) {
+                BottomSheetWebhooks bottomSheetWebhooks = new BottomSheetWebhooks(titleBottomSheet, descriptionBottomSheet, o -> sendWebhooks());
+                bottomSheetWebhooks.show(((FragmentActivity) context).getSupportFragmentManager(), bottomSheetWebhooks.getTag());
+            } else
+                sendWebhooks();
+        } catch (Exception e) {
+            Log.e(TAG, "build: ", e);
+        }
+        return this;
+    }
+
+    private void sendWebhooks() {
         try {
             new AsyncTask().getBackgroundThread().execute(() -> {
                 exportSessionAndDatabase();
@@ -100,7 +127,6 @@ public class WebhooksConfiguration {
         } catch (Exception e) {
             Log.e(TAG, "build: ", e);
         }
-        return this;
     }
 
     private void exportSessionAndDatabase() {

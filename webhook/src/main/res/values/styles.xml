@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="WebhooksBottomSheetStyles" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetBackground</item>
+        <!-- Untuk BottomSheet di atas Keyboard
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        Untuk BottomSheet di atas Keyboard -->
+    </style>
+
+    <style name="bottomSheetBackground" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottomsheet_background_webhooks</item>
+    </style>
+</resources>
