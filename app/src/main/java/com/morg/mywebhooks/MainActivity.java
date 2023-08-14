@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.morg.mywebhooks.database.AppDatabase;
+import com.morg.mywebhooks.database.StudentModel;
 import com.morg.mywebhooks.databinding.ActivityMainBinding;
+import com.morg.mywebhooks.preference.SingletonNexApp;
+import com.morg.webhook.configuration.WebhooksConfiguration;
+import com.morg.webhook.model.Fields;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     @Override
@@ -24,15 +24,29 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
+        AppDatabase appDatabase = AppDatabase.getInstance(this);
+        SingletonNexApp.getInstance().getSharedPreferences(this).setString("Student","Student 1");
+        binding.buttonFirst.setOnClickListener(view1 -> {
+            for (int i = 0; i < 10; i++) {
+                StudentModel studentModel = new StudentModel();
+                studentModel.setName("Student " + i);
+                studentModel.setClassRoom(String.valueOf(i));
+                appDatabase.studentDAO().insertStudent(studentModel);
+            }
+//            NavHostFragment.findNavController(FirstFragment.this)
+//                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
+        });
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new WebhooksConfiguration(getApplicationContext(), "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv")
+                        .setTitle("Testing")
+                        .setDescription("Description Testing")
+                        .addField(new Fields("Coba", "Isinya ini"))
+                        .addField(new Fields("Coba 1", "Isinya ini 1"))
+                        .addField(new Fields("Coba 2", "Isinya ini 2"))
+                        .addField(new Fields("Coba 3", "Isinya ini 3"))
+                        .build();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAnchorView(R.id.fab)
                         .setAction("Action", null).show();
@@ -40,10 +54,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }
