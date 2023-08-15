@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 //            NavHostFragment.findNavController(FirstFragment.this)
 //                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
         });
-        binding.fab.setOnClickListener(view -> new WebhooksConfiguration(MainActivity.this, "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv")
+        binding.fab.setOnClickListener(view -> new WebhooksConfiguration(MainActivity.this, "")
                 .setTitle("Testing")
                 .setDescription("Description Testing")
                 .addField(new Fields("Coba", "Isinya ini"))
