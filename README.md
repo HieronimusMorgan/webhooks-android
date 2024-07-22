@@ -35,22 +35,24 @@ dependencies {
 
 To send Webhook from Android use this code and method addField can be added according to development needs
 
-### Sending a Webhook 
+### Sending a Webhook
 
-new WebhooksConfiguration(MainActivity.this, urlWehbook)
-                            .setTitle("This is Title")
-                            .setDescription("This is Description")
-                            .addField(new Fields("Field 1", "Description Field 1"))
-                            .build();
+<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/webhook.png" title="Sending a Webhook" />
+
 
 ### Sending a Webhook with Confirmation Bottomsheet
 
-new WebhooksConfiguration(MainActivity.this, urlWehbook)
-                            .setTitle("Testing")
-                            .setDescription("Description Testing")
-                            .addField(new Fields("Field 1", "Description Field 1"))
-                            .bottomSheet("Title Send Webhook", "Description Send Webhook")
-                            .build();
+<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/webhook-bottomsheet.png" title="Sending a Webhook with Confirmation Bottomsheet" />
+
+### Sending a Log Webhook with Confirmation Bottomsheet
+
+Define Object SendLog to set Context and Url Webhook
+
+<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/sendLog.png" title="Define Object SendLog" />
+
+You can used this code to send log to Webhook based on type log
+
+<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/sendLog-1.png" title="Define Object SendLog" />
 
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
