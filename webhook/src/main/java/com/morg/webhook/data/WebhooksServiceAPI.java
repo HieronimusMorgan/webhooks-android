@@ -13,4 +13,8 @@ public interface WebhooksServiceAPI {
     Call<String> sendWebhooksRequestBody(@Path(value = "fullUrl", encoded = true) String fullUrl,
                                          @Part("payload_json") okhttp3.RequestBody name,
                                          @Part MultipartBody.Part file);
+    @Multipart
+    @POST("{fullUrl}")
+    Call<String> sendWebhooksRequestBodyLog(@Path(value = "fullUrl", encoded = true) String fullUrl,
+                                         @Part("payload_json") okhttp3.RequestBody name);
 }

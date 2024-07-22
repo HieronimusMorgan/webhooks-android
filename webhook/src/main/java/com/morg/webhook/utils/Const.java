@@ -6,7 +6,6 @@ public class Const {
         public static final String DATABASE_PATH = "/databases";
         public static final String SHARED_PREF_PATH = "/shared_prefs";
         public static final String SLASH = "/";
-        public static final String EXPORT = "/export";
 
         private Data(){
             throw new IllegalStateException(Data.class.getSimpleName());

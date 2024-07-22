@@ -3,6 +3,8 @@ package com.morg.webhook.utils;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,11 +16,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class FileUtil {
     private final String folderPath;
     private final Context context;
-    private String TAG = FileUtil.class.getSimpleName();
+    private final String TAG = FileUtil.class.getSimpleName();
 
     public FileUtil(Context context) {
         this.context = context;
@@ -98,4 +102,26 @@ public class FileUtil {
         return sdf.format(new Date());
     }
 
+    public static void zip(String[] _files, String zipFileName) {
+        try (FileOutputStream dest = new FileOutputStream(zipFileName); ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+                dest))) {
+            byte[] data = new byte[2048];
+            for (String file : _files) {
+                Log.v("", "Adding: " + file);
+                try (FileInputStream fi = new FileInputStream(file); BufferedInputStream origin = new BufferedInputStream(fi, 2048)) {
+                    ZipEntry entry = new ZipEntry(file.substring(file.lastIndexOf("/") + 1));
+                    out.putNextEntry(entry);
+                    int count;
+
+                    while ((count = origin.read(data, 0, 2048)) != -1) {
+                        out.write(data, 0, count);
+                    }
+                } catch (Exception e) {
+                    Log.e("ERROR", e.toString());
+                }
+            }
+        } catch (Exception e) {
+            Log.e("ERROR", e.toString());
+        }
+    }
 }

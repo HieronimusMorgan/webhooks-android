@@ -1,20 +1,15 @@
 package com.morg.webhook.bottomsheet;
 
 
-import android.app.Dialog;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.morg.webhook.R;
 import com.morg.webhook.databinding.WebhooksBottomSheetNexmitraBinding;
@@ -24,7 +19,6 @@ public class BottomSheetWebhooks extends BottomSheetDialogFragment {
     private final String title;
     private final OnClickBottomSheetWebhooks onClickBottomSheetWebhooks;
     private final String description;
-    private WebhooksBottomSheetNexmitraBinding binding;
 
     public BottomSheetWebhooks(String title, String description, OnClickBottomSheetWebhooks onClickBottomSheetWebhooks) {
         this.onClickBottomSheetWebhooks = onClickBottomSheetWebhooks;
@@ -42,7 +36,7 @@ public class BottomSheetWebhooks extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.webhooks_bottom_sheet_nexmitra, null);
-        binding = WebhooksBottomSheetNexmitraBinding.bind(view);
+        WebhooksBottomSheetNexmitraBinding binding = WebhooksBottomSheetNexmitraBinding.bind(view);
         if (!title.isEmpty())
             binding.tvTitle.setText(title);
         if (!description.isEmpty())
