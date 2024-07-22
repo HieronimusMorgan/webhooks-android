@@ -1,8 +1,7 @@
 package com.morg.webhook.configuration;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Environment;
 import android.util.Log;
 
@@ -10,18 +9,17 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.morg.webhook.bottomsheet.BottomSheetWebhooks;
-import com.morg.webhook.bottomsheet.OnClickBottomSheetWebhooks;
 import com.morg.webhook.data.RetrofitHttpsCall;
 import com.morg.webhook.data.WebhooksServiceAPI;
 import com.morg.webhook.model.Embeds;
 import com.morg.webhook.model.Fields;
 import com.morg.webhook.model.Webhooks;
 import com.morg.webhook.utils.AsyncTask;
-import com.morg.webhook.utils.CompressFile;
 import com.morg.webhook.utils.Const;
 import com.morg.webhook.utils.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,23 +32,25 @@ import retrofit2.Response;
 
 public class WebhooksConfiguration {
     private static final String TAG = WebhooksConfiguration.class.getSimpleName();
-    private final Context context;
+    private Context context = null;
     private String title;
     private String description;
     private String titleBottomSheet;
     private String descriptionBottomSheet;
     private List<Fields> fields;
     private WebhooksServiceAPI webhooksServiceAPI;
-    private String webhooksUrl;
+    private String webhooksUrl = "";
     private FileUtil fileUtil;
 
     public WebhooksConfiguration(Context context, String webhooksUrl) {
-        this.webhooksUrl = webhooksUrl;
-        this.context = context;
-        this.fileUtil = new FileUtil(context);
-        this.fields = new ArrayList<>();
-        fields.add(new Fields("Project", getApplicationName()));
-        webhooksServiceAPI = RetrofitHttpsCall.getInstance(webhooksUrl + Const.Data.SLASH).create(WebhooksServiceAPI.class);
+        if (this.context == null && this.webhooksUrl.isEmpty()) {
+            this.webhooksUrl = webhooksUrl;
+            this.context = context;
+            this.fileUtil = new FileUtil(context);
+            this.fields = new ArrayList<>();
+            fields.add(new Fields("Project", getApplicationName()));
+            webhooksServiceAPI = RetrofitHttpsCall.getInstance(webhooksUrl + Const.Data.SLASH).create(WebhooksServiceAPI.class);
+        }
     }
 
     private String getApplicationName() {
@@ -91,6 +91,12 @@ public class WebhooksConfiguration {
         return this;
     }
 
+    public static String getApplicationName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+    }
+
     private void sendWebhooks() {
         try {
             new AsyncTask().getBackgroundThread().execute(() -> {
@@ -129,6 +135,40 @@ public class WebhooksConfiguration {
         }
     }
 
+    public WebhooksConfiguration sendLog() {
+        try {
+            sendLogWebhooks();
+        } catch (Exception e) {
+            Log.e(TAG, "build: ", e);
+        }
+        return this;
+    }
+
+    private void sendLogWebhooks() {
+        try {
+            new AsyncTask().getBackgroundThread().execute(() -> {
+                Webhooks webhooks = new Webhooks();
+                List<Embeds> embeds = new ArrayList<>();
+                Embeds embed = new Embeds();
+                embed.setTitle(title + " " + getApplicationName(context));
+                embed.setDescription(description);
+
+                embeds.add(embed);
+                webhooks.setEmbeds(embeds);
+
+                RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), new Gson().toJson(webhooks));
+                try {
+                    webhooksServiceAPI.sendWebhooksRequestBodyLog(webhooksUrl, requestBody).execute();
+                } catch (IOException e) {
+                    Log.e(TAG, "sendLogWebhooks: ", e);
+                }
+
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "build: ", e);
+        }
+    }
+
     private void exportSessionAndDatabase() {
         File files = fileUtil.getAbsoluteFile();
         String[] arraySession = exportSession(files);
@@ -140,7 +180,7 @@ public class WebhooksConfiguration {
 
         System.arraycopy(arrayDatabase, 0, result, 0, databaseLength);
         System.arraycopy(arraySession, 0, result, databaseLength, sessionLength);
-        CompressFile.zip(result, fileUtil.getAbsoluteFile().getAbsolutePath());
+        FileUtil.zip(result, fileUtil.getAbsoluteFile().getAbsolutePath());
     }
 
     private String[] exportDB(File file) {
