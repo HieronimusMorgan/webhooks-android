@@ -28,7 +28,7 @@ Webhooks-Android is a simple and powerful library designed to facilitate the int
 Add the following dependency to your `build.gradle` file:
 
 dependencies {
-    implementation 'com.example:webhooks-android:1.0.0'
+    implementation 'com.github.HieronimusMorgan:webhooks-android:v.1.0.0'
 }
 
 ## Usage
