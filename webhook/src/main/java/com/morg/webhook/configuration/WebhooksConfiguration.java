@@ -150,8 +150,10 @@ public class WebhooksConfiguration {
                 Webhooks webhooks = new Webhooks();
                 List<Embeds> embeds = new ArrayList<>();
                 Embeds embed = new Embeds();
-                embed.setTitle(title + " " + getApplicationName(context));
+                embed.setTitle(title);
                 embed.setDescription(description);
+
+                embed.setFields(fields);
 
                 embeds.add(embed);
                 webhooks.setEmbeds(embeds);

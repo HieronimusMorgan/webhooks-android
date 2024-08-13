@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         SendLog sendLog = new SendLog(this, "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv");
         binding.fab.setOnClickListener(view -> {
                     sendLog.sendLogError(new Throwable());
-                    sendLog.sendLogDebug("Debug Testing");
+                    sendLog.sendLogDebug(MainActivity.class.getSimpleName(), "Debug Log");
                     sendLog.sendLogInfo("Info Testing");
                     sendLog.sendLogWarning("Warning Testing");
                     sendLog.sendLogVerbose("Verbose Testing");
