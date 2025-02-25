@@ -1,43 +1,41 @@
-# Webhooks-Android
+# 📡 Android Discord Webhook Logger (Java Module)
 
-A comprehensive library to integrate webhooks into your Android application.
+This project is an **Android development** module built using **Java**. It focuses on **automatically sending data to Discord via Webhook** whenever the app **crashes, force closes, or encounters an error**. This module helps in monitoring and logging unexpected issues in real-time, making debugging and maintenance easier.
 
-## Table of Contents
-
+## 📖 Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Sending a Webhook](#sending-a-webhook)
-  - [Sending a Webhook with Confirmation Bottomsheet](#sending-a-webhook-with-confirmation-bottomsheet)
-  - [Sending a Log Webhook with Confirmation Bottomsheet](#sending-a-log-webhook-with-confirmation-bottomsheet)
+  - [Configuring the Webhook](#configuring-the-webhook)
+  - [Sending Crash Reports](#sending-crash-reports)
+  - [Customizing Payload Data](#customizing-payload-data)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Introduction
+## 📝 Introduction
 
-Webhooks-Android is a simple and powerful library designed to facilitate the integration of webhooks in your Android applications. This library provides easy-to-use methods to send and receive webhook payloads. It is especially suited for developers who want seamless integration of webhook functionality with robust logging, error handling, and confirmation mechanisms.
-
----
-
-## Features
-
-- **Easy Integration**: Minimal setup to get started.
-- **Payload Support**: Handle various payload formats (e.g., JSON, XML).
-- **Retry Mechanism**: Automatic retries for failed requests.
-- **Detailed Logging**: Comprehensive logs for debugging and tracing webhook events.
-- **Confirmation Bottomsheet**: Optional confirmation dialog before sending webhooks.
-- **Support for Log-Based Webhooks**: Efficiently send log data as webhooks.
+**Android Discord Webhook Logger** is a lightweight module designed to capture app crashes and errors, then send detailed reports to a designated Discord channel via Webhooks. This ensures real-time monitoring and allows developers to quickly diagnose and resolve issues.
 
 ---
 
-## Installation
+## ✨ Features
 
-To integrate the library into your project, add the following dependency to your `build.gradle` file:
+- 🚀 **Automatic Error Reporting** – Captures app crashes and sends logs instantly.
+- 🔗 **Discord Webhook Integration** – Uses Discord Webhooks for real-time notifications.
+- ⚡ **Lightweight and Efficient** – Designed as a minimal Java module with minimal overhead.
+- 🛠 **Easy Integration** – Can be plugged into any Android project using Java.
+- 📊 **Customizable Payload** – Modify the data sent to Discord, including device info, logs, and error messages.
+
+---
+
+## 🛠 Installation
+
+To integrate this module into your Android project, add the following dependency to your `build.gradle` file:
 
 ```gradle
 dependencies {
-    implementation 'com.github.HieronimusMorgan:webhooks-android:v1.0.0'
+    implementation 'com.github.YourUsername:discord-webhook-logger:v1.0.0'
 }
 ```
 
@@ -45,53 +43,48 @@ Sync your project to download the dependency.
 
 ---
 
-## Usage
+## 🚀 Usage
 
-### Sending a Webhook
+### Configuring the Webhook
 
-You can use the following code to send a webhook. The `addField` method allows you to customize the payload according to your needs:
+To initialize the webhook module, configure it with your Discord webhook URL:
 
 ```java
-WebhooksConfiguration webhooksConfig = new WebhooksConfiguration(context, "https://discord.com/api/webhooks/your-webhook-url");
-webhooksConfig.setTitle("Sample Title")
-    .setDescription("Sample Description")
-    .addField(new Fields("Key", "Value"))
-    .build();
+DiscordWebhookLogger logger = new DiscordWebhookLogger("https://discord.com/api/webhooks/your-webhook-url");
 ```
-
-<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/webhook.png" title="Sending a Webhook" />
 
 ---
 
-### Sending a Webhook with Confirmation Bottomsheet
+### Sending Crash Reports
 
-Use the `bottomSheet` method to display a confirmation dialog before sending the webhook:
+Integrate the logger into your `UncaughtExceptionHandler` to automatically send crash reports:
 
 ```java
-webhooksConfig.bottomSheet("Confirm Action", "Are you sure you want to send this webhook?").build();
+Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+    String errorReport = Log.getStackTraceString(throwable);
+    logger.sendErrorReport("App Crashed!", errorReport);
+    System.exit(1);
+});
 ```
 
-<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/webhook-bottomsheet.png" title="Sending a Webhook with Confirmation Bottomsheet" />
+This ensures that any unhandled exceptions trigger an immediate webhook notification.
 
 ---
 
-### Sending a Log Webhook with Confirmation Bottomsheet
+### Customizing Payload Data
 
-1. Define the `SendLog` object to initialize the webhook context and URL:
-
-<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/sendLog.png" title="Define Object SendLog" />
-
-2. Use this code to send logs to the webhook based on log type:
+You can modify the payload before sending it to include additional debugging information:
 
 ```java
-webhooksConfig.sendLog();
+logger.setUsername("Crash Bot");
+logger.setAvatarUrl("https://your-avatar-url.com/image.png");
+logger.addField("Device Model", Build.MODEL);
+logger.addField("OS Version", Build.VERSION.RELEASE);
 ```
-
-<img src="https://github.com/HieronimusMorgan/webhooks-android/blob/development/screenshoot/sendLog-1.png" title="Send Log Webhook" />
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! To contribute:
 
@@ -103,11 +96,10 @@ For major changes, please open an issue to discuss your proposed enhancements.
 
 ---
 
-## License
+## 📜 License
 
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this library as per the terms of the license.
+This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute this module as per the terms of the license.
 
 ---
 
-Enhancements include detailed descriptions, improved formatting, and structured examples for better clarity and usability. Let me know if further refinements are needed!
-
+This module is ideal for **developers looking to monitor app crashes in real time** and ensure seamless error tracking using **Discord Webhooks**. 🚀📡
