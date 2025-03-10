@@ -4,7 +4,6 @@ plugins {
 
 android {
     namespace 'com.morg.webhook'
-    compileSdk 35
 
     defaultConfig {
         minSdk 21
