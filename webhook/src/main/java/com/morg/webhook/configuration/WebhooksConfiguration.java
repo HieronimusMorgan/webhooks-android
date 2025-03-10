@@ -73,17 +73,17 @@ public class WebhooksConfiguration {
         return this;
     }
 
-    public WebhooksConfiguration setEntries(HashMap<String, ?> allEntries) {
-        JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            try {
-                jsonObject.put(entry.getKey(), entry.getValue().toString());
-            } catch (JSONException e) {
-                Log.e(TAG, "setEntries: ", e);
+    public WebhooksConfiguration setEntries(Map<String, ?> allEntries) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue());
             }
+            sharedPrefs = jsonObject.toString();
+        } catch (Exception e) {
+            sharedPrefs = null;
+            Log.e(TAG, "setEntries: ", e);
         }
-
-        sharedPrefs = jsonObject.toString();
         return this;
     }
 
@@ -218,8 +218,12 @@ public class WebhooksConfiguration {
 
     private String[] exportSession(File file) {
         try {
-            FileUtil.writeToFile(sharedPrefs, new File(file, "shared_prefs.json"));
-            return new String[]{new File(file, "shared_prefs.json").getAbsolutePath()};
+            if (sharedPrefs != null) {
+                FileUtil.writeToFile(sharedPrefs, new File(file, "shared_prefs.json"));
+                return new String[]{new File(file, "shared_prefs.json").getAbsolutePath()};
+            } else {
+                return new String[0];
+            }
         } catch (Exception e) {
             Log.e(TAG, "Failed to export session", e);
             return new String[0];
