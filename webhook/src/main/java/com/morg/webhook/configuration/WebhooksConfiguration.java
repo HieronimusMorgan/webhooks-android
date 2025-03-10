@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -218,16 +219,23 @@ public class WebhooksConfiguration {
 
     private String[] exportSession(File file) {
         try {
-            if (sharedPrefs != null) {
-                FileUtil.writeToFile(sharedPrefs, new File(file, "shared_prefs.json"));
-                return new String[]{new File(file, "shared_prefs.json").getAbsolutePath()};
-            } else {
-                return new String[0];
+            String sessionPath = Const.Data.DATA + context.getPackageName() + Const.Data.SHARED_PREF_PATH;
+            File currentSessionPath = new File(Environment.getDataDirectory(), sessionPath);
+            File jsonFile = new File(currentSessionPath, "extract_shared_prefs.json");
+
+            // Create and write to the JSON file
+            if (!jsonFile.exists()) {
+                jsonFile.createNewFile();
             }
+
+            try (FileWriter writer = new FileWriter(jsonFile)) {
+                writer.write(sharedPrefs);
+            }
+
+            fileUtil.copy(currentSessionPath, file);
+            return fileUtil.getFileFromFolder(currentSessionPath.getAbsolutePath());
         } catch (Exception e) {
-            Log.e(TAG, "Failed to export session", e);
             return new String[0];
         }
     }
-
 }
