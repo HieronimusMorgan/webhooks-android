@@ -8,12 +8,14 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.zip.ZipEntry;
@@ -27,6 +29,15 @@ public class FileUtil {
     public FileUtil(Context context) {
         this.context = context;
         folderPath = getApplicationName() + " " + dateFormat();
+    }
+
+    public static void writeToFile(String data, File file) {
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(data);
+            writer.flush();
+        } catch (IOException e) {
+            Log.e("FileUtil", "Error writing file", e);
+        }
     }
 
     private String getApplicationName() {

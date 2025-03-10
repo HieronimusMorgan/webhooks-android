@@ -18,10 +18,15 @@ import com.morg.webhook.utils.AsyncTask;
 import com.morg.webhook.utils.Const;
 import com.morg.webhook.utils.FileUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -35,6 +40,7 @@ public class WebhooksConfiguration {
     private Context context = null;
     private String title;
     private String description;
+    private String sharedPrefs;
     private String titleBottomSheet;
     private String descriptionBottomSheet;
     private List<Fields> fields;
@@ -64,6 +70,20 @@ public class WebhooksConfiguration {
 
     public WebhooksConfiguration setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public WebhooksConfiguration setEntries(HashMap<String, ?> allEntries) {
+        JSONObject jsonObject = new JSONObject();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            try {
+                jsonObject.put(entry.getKey(), entry.getValue().toString());
+            } catch (JSONException e) {
+                Log.e(TAG, "setEntries: ", e);
+            }
+        }
+
+        sharedPrefs = jsonObject.toString();
         return this;
     }
 
@@ -198,11 +218,10 @@ public class WebhooksConfiguration {
 
     private String[] exportSession(File file) {
         try {
-            String sessionPath = Const.Data.DATA + context.getPackageName() + Const.Data.SHARED_PREF_PATH;
-            File currentSessionPath = new File(Environment.getDataDirectory(), sessionPath);
-            fileUtil.copy(currentSessionPath, file);
-            return fileUtil.getFileFromFolder(currentSessionPath.getAbsolutePath());
+            FileUtil.writeToFile(sharedPrefs, new File(file, "shared_prefs.json"));
+            return new String[]{new File(file, "shared_prefs.json").getAbsolutePath()};
         } catch (Exception e) {
+            Log.e(TAG, "Failed to export session", e);
             return new String[0];
         }
     }
