@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 //            NavHostFragment.findNavController(FirstFragment.this)
 //                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
         });
-        SendLog sendLog = new SendLog(this, "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv");
+        SendLog sendLog = new SendLog(this, "https://discord.com/api/webhooks/1272780437454061588/jWjScs5ASOrputBs11v0uWUnlZCZZEkK5x1GK5MMhW7yYZxJFHv3t8gBCBZXpnbK9VYn");
         binding.fab.setOnClickListener(view -> {
                     sendLog.sendLogError(new Throwable());
                     sendLog.sendLogDebug(MainActivity.class.getSimpleName(), "Debug Log");
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     sendLog.sendLogVerbose("Verbose Testing");
                     sendLog.sendLogAssert("Assert Testing");
 
-                    new WebhooksConfiguration(MainActivity.this, "https://discord.com/api/webhooks/1140550535431327744/bjm4bas9VoUDn6oPNGEqnXtaVo_ybRqnl7HcPSL9SFLlqwynNW7-iri-6s6SN107BVNv")
+                    new WebhooksConfiguration(MainActivity.this, "https://discord.com/api/webhooks/1272780437454061588/jWjScs5ASOrputBs11v0uWUnlZCZZEkK5x1GK5MMhW7yYZxJFHv3t8gBCBZXpnbK9VYn")
                             .setTitle("Testing")
                             .setDescription("Description Testing")
                             .addField(new Fields("Coba", "Isinya ini"))
